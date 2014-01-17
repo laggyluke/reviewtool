@@ -3,6 +3,32 @@ Changeset-Based Review Tool (CBRT)
 
 This document attempts to explain how the CBRT should work, what its main components are, and what the developer interactions look like.
 
+10,000 Feet Overview
+====================
+
+Node.JS app - API and UI on top of it
+
+Review tool:
+* offer an api for git/hg hooks to notify tool of new reviews: return url of a view to set r? requests(1 url per bug)
+* url shows a list of all changesets pushed that triggered the hook and allow dev to set r? on each changeset pushed
+* call bugzilla api to update relevant bugs with review activity
+* changesets should be listed in attachments view like patches are now
+* lets developers annotate(append-only in the backend) lines in relevant changesets with comments (both before and after the change, in case someone needs to say something about the way the code used to work before the change.)
+* can set overall review to "r+ accepted" or "r- rejected" or "r? cleared" or reassign r? to someone else
+* syntax highlight would be nice, but not necessary yet(might be able to reuse hg browsing ui or dxr)
+* links pointing back from bugzilla should be persistent(should keep hg/git changesets forever)
+* any changes in UI are discardable until user presses 'commit'. At this point changes should be synced with bugzilla and persisted (add comments, set the appropriate flags on the attachment in bugzilla too)
+
+Post-review?
+* offer the ability to set a checkin? flag on a set of changesets pushed through the tool, specifying which branch they need to be merged into (try/inbound/etc + a destination sha1 which would be tip for inbound, and some other sha1 for try pushes).
+* offer an API to pull the sha1 for the topmost commit in the set of changes which have a checkin? flag
+* the autoland tool would look for checkin? flags, and pulls those changes and transplants them on top the branch in question using the destination sha1
+* for git pushes, the git commits need to be converted to hg changesets using hg-git. this part can happen later
+* if the changesets are not transplanted cleanly, the author can rebase their work locally, push it again to the review tool, and set the checkin? flag on the rebased set of changes
+* when a transplant successfully finishes, the autoland tool will set the checkin+ flag through an API, otherwise it will set the checkin- flag
+* this lets people deal with pushing multiple changes from multiple bugs atomically by making sure that all of those changes exist in their local repos, which integrates well with the local workflow
+
+
 Basic Architecture
 ==================
 
