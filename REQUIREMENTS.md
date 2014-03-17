@@ -21,9 +21,12 @@ See [GLOSSARY](GLOSSARY.md).
 16. **Code Review Tool** MUST be able to handle tens of thousands of **Review Requests** during it's lifetime.
 17. **Code Review Tool** MUST preserve a history of past **Review Requests**, their **Changests**, comments etc.
 18. **Code Review Tool** MUST provide an HTTP API for all its features.
-19. **Code Review Tool** SHOULD be hosted at <something>.mozilla.org.
+19. **Code Review Tool** SHOULD be hosted at `<something>.mozilla.org`.
 20. **Code Review Tool** MAY eventually be a part of a bigger system related to continuous integration.
 21. **Code Review Tool** MAY NOT rely on Mercurial features that are not used by most of the Mozillians, e.g. bookmarks and MQ.
 22. **Feature** MAY contain **Changesets** that should be ignored during review.
 23. User SHOULD be able to ignore such **Changesets** when creating **Review Request**
 24. Previously ignored **Changesets** SHOULD be available for review later as a part of a separate **Review Request**.
+25. The mozilla-central repository MUST remain hosted on hg.mozilla.org.
+26. The mozilla-central repository MUST remain a Mercurial repository, not Git.
+27. Review Request MUST be automatically updated when new Changesets are pushed for the corresponding Feature.
